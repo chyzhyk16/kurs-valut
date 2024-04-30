@@ -1,0 +1,31 @@
+parameters:
+
+services:
+    # default configuration for services in *this* file
+    _defaults:
+        autowire: true      # Automatically injects dependencies in your services.
+        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.ґ
+
+    App\:
+        resource: '../src/'
+        exclude:
+            - '../src/DependencyInjection/'
+            - '../src/Entity/'
+            - '../src/Kernel.php'
+
+    _instanceof:
+        App\Bank\BankInterface:
+            tags: ['app.bank']
+
+    App\Service\ExchangeRateService:
+        arguments:
+            $storage: '@App\Storage\JsonStorage'
+            $threshold: '%env(THRESHOLD)%'
+
+    App\Service\NotifyService:
+        arguments:
+            $notifier: '@App\Notifier\MailerNotifier'
+
+    App\Notifier\MailerNotifier:
+        arguments:
+            $recipient: 'example@gmail.com'

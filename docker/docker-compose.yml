@@ -1,0 +1,29 @@
+version: '3.9'
+
+services:
+  php-fpm:
+    container_name: kurs-valut-php-fpm
+    build:
+      context: php-fpm
+    volumes:
+      - ./../:/var/www
+    networks:
+      kurs-valut:
+        ipv4_address: 192.168.100.105
+
+  mailhog:
+    image: mailhog/mailhog:latest
+    ports:
+      - 1025:1025
+      - 8025:8025
+    networks:
+      kurs-valut:
+        ipv4_address: 192.168.100.7
+
+networks:
+  kurs-valut:
+    name: kurs-valut
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 192.168.100.0/24
